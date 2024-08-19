@@ -28,6 +28,20 @@ Over the network you will be able to send data in approximately this format:
 }
 ```
 
+This library is not published in crates.io. So before you started you should:
+
+1. Clone and build
+```sh
+git clone
+cargo build --release
+```
+
+2. Add dependency to `Cargo.toml`
+```toml
+[dependencies]
+rust_aes256 = { path = "path/to/rust_aes256" }
+```
+
 ## Details
 
 AES is a symmetric block cipher algorithm. It is a method of encrypting data in which the same key is used for both encoding and decrypting information. The AES algorithm is an iterative block cipher with a symmetric key that supports cryptographic keys (secret keys) of 128, 192, and 256 bits to encrypt and decrypt data in 128-bit blocks. If the data to be encrypted does not meet the 128-bit block size requirement, it must be padded. The final block will be padded to 128 bits.
@@ -46,7 +60,7 @@ Terms:
 * **secret key** is a 256-bit (32-byte) AES-256 binary key that is a hash of the password
 * **salt** is a random 8 bytes that is added to the end of the password when forming the secret key. It is transmitted openly at the beginning of the message
 * **initialization vector** is a random 16 bytes that will be required to implement AES-256-CBC. It is transmitted openly at the beginning of the message
-* **Encrypted data** is data encrypted with the AES-256-CBC algorithm. One of the parts of the message
+* **encrypted data** is data encrypted with the AES-256-CBC algorithm. One of the parts of the message
 
 ## Message
 

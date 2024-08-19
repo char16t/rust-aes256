@@ -12,4 +12,3 @@ codecov: clean
 clean:
 	rm -rf target/
 	rm -rf *.profraw
-	rm -rf *.input
