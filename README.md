@@ -1,3 +1,33 @@
+## Быстрый старт
+
+Две стороны могут обмениваться зашифрованными сообщениями, предварительно договорившись использовать пароль (password). Вы можете использовать пример реализации следующим образом:
+
+```rust
+use rust_aes256::AES256;
+
+fn main() {
+    let password: &str = "secret";
+    let original: &str = "Original string";
+
+    let aes256: AES256 = AES256::new(password.as_bytes());
+    let encrypted: String = aes256.encrypt(&original).expect("Unable to encrypt original message");
+    println!("Encrypted: {}", encrypted);
+    
+    let decrypted: String = aes256.decrypt(&encrypted).expect("Unable to decrypt encrypted message");
+    println!("Decrypted: {}", decrypted);
+}
+```
+
+По сети вы сможете отправлять данные примерно такого формата:
+
+```json
+{
+  "data": "yRN4j3X9ReBocpR6vWrtG96ASY1EXVuptZ/TxrIBvk3zUP3wIMEBOjKnhQfQGVDqn5v5mWjP7x605k82rr5rCg=="
+}
+```
+
+## Детали
+
 AES – симметричный алгоритм блочного шифрования. Это способ шифрования данных, при котором один и тот же ключ используется и для кодирования, и для восстановления информации. Алгоритм AES представляет собой итеративный блочный шифр с симметричным ключом, который поддерживает криптографические ключи (секретные ключи) длиной 128, 192 и 256 бит для шифрования и дешифрования данных блоками по 128 бит. Если данные, подлежащие шифрованию, не соответствуют требованию к размеру блока в 128 бит, они должны быть дополнены. Последний блок будет дополнен до 128 бит.
 
 Варианты AES:
@@ -172,31 +202,3 @@ aes256key2 = hash(password + salt2)
 6. Сформировать секретный ключ AES-256 (бинарный ключ размером 256 бит) на основе пароля (password) и соли (salt)
 7. Сформировать шифр (cipher) на основе секретного ключа (secret key) и вектора инициализации (initialization vector)
 8. Применить шифр (cipher) к зашифрованным данным (payload) для расшифровки и получить данные
-
-## Примеры
-
-По сети мы можем отправлять данные примерно такого формата:
-
-```json
-{
-  "data": "yRN4j3X9ReBocpR6vWrtG96ASY1EXVuptZ/TxrIBvk3zUP3wIMEBOjKnhQfQGVDqn5v5mWjP7x605k82rr5rCg=="
-}
-```
-
-Вы можете использовать пример реализации следующим образом:
-
-```rust
-use rust_aes256::AES256;
-
-fn main() {
-    let password: &str = "secret";
-    let original: &str = "Original string";
-
-    let aes256: AES256 = AES256::new(password.as_bytes());
-    let encrypted: String = aes256.encrypt(&original).expect("Unable to encrypt original message");
-    println!("Encrypted: {}", encrypted);
-    
-    let decrypted: String = aes256.decrypt(&encrypted).expect("Unable to decrypt encrypted message");
-    println!("Decrypted: {}", decrypted);
-}
-```
