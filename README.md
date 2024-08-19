@@ -1,6 +1,8 @@
-## Быстрый старт
+Этот документ [переведён на русский язык](README.ru.md).
 
-Две стороны могут обмениваться зашифрованными сообщениями, предварительно договорившись использовать пароль (password). Вы можете использовать пример реализации следующим образом:
+## Quick start
+
+Two parties can exchange encrypted messages by agreeing to use a password. You can use an example implementation as follows:
 
 ```rust
 use rust_aes256::AES256;
@@ -18,7 +20,7 @@ fn main() {
 }
 ```
 
-По сети вы сможете отправлять данные примерно такого формата:
+Over the network you will be able to send data in approximately this format:
 
 ```json
 {
@@ -26,29 +28,29 @@ fn main() {
 }
 ```
 
-## Детали
+## Details
 
-AES – симметричный алгоритм блочного шифрования. Это способ шифрования данных, при котором один и тот же ключ используется и для кодирования, и для восстановления информации. Алгоритм AES представляет собой итеративный блочный шифр с симметричным ключом, который поддерживает криптографические ключи (секретные ключи) длиной 128, 192 и 256 бит для шифрования и дешифрования данных блоками по 128 бит. Если данные, подлежащие шифрованию, не соответствуют требованию к размеру блока в 128 бит, они должны быть дополнены. Последний блок будет дополнен до 128 бит.
+AES is a symmetric block cipher algorithm. It is a method of encrypting data in which the same key is used for both encoding and decrypting information. The AES algorithm is an iterative block cipher with a symmetric key that supports cryptographic keys (secret keys) of 128, 192, and 256 bits to encrypt and decrypt data in 128-bit blocks. If the data to be encrypted does not meet the 128-bit block size requirement, it must be padded. The final block will be padded to 128 bits.
 
-Варианты AES:
+AES variants:
 
- * ECB (Electronic Code Book) – открытый текст разбивается на блоки размером 128 бит. Затем каждый блок шифруется одним и тем же ключом и алгоритмом. Это означает, что идентичные блоки открытого текста приведут к идентичным блокам зашифрованного текста.
- * CBC (Cipher Block Chaining) – режим CBC решает проблему идентичных блоков открытого текста в ECB. Он вводит вектор инициализации (IV) для первого блока и выполняет XOR для предыдущего блока зашифрованного текста с текущим блоком открытого текста перед шифрованием. Режим CBC обеспечивает более высокий уровень безопасности, чем ECB, и широко используется в протоколах защищенной связи, таких как SSL/TLS, IPSec и VPN.
+* ECB (Electronic Code Book) – The plaintext is divided into 128-bit blocks. Each block is then encrypted with the same key and algorithm. This means that identical plaintext blocks will result in identical ciphertext blocks.
+* CBC (Cipher Block Chaining) – CBC mode solves the problem of identical plaintext blocks in ECB. It introduces an initialization vector (IV) for the first block and XORs the previous ciphertext block with the current plaintext block before encryption. CBC mode provides a higher level of security than ECB and is widely used in secure communication protocols such as SSL/TLS, IPSec, and VPN.
 
-В этой библиотеке реализован AES-256 CBC.
+This library uses AES-256 CBC.
 
-Термины:
+Terms:
 
- * Сообщение – это набор данных, которыми мы обмениваемся по сети
- * Пароль – это "секретный ключ", которым мы обменяемся один раз. Он представляет собой строку произвольной длины
- * Секретный ключ – это бинарный ключ AES-256 длиной 256 бит (32 байта), представляющий собой хэш от пароля
- * Соль - это случайные 8 байт, которое добавляется в конец пароля при формировании секретного ключа. Передаётся открыто в начале сообщения
- * Вектор инициализации - это случайные 16 байт, которые потребуются для реализации AES-256-CBC. Передаётся открыто в начале сообщения
- * Зашифрованные данные - это данные, зашифрованные алгоритмом AES-256-CBC. Одна из частей сообщения
+* **message** is a set of data that we exchange over the network
+* **password** is a "secret key" that we exchange once. It is a string of arbitrary length
+* **secret key** is a 256-bit (32-byte) AES-256 binary key that is a hash of the password
+* **salt** is a random 8 bytes that is added to the end of the password when forming the secret key. It is transmitted openly at the beginning of the message
+* **initialization vector** is a random 16 bytes that will be required to implement AES-256-CBC. It is transmitted openly at the beginning of the message
+* **Encrypted data** is data encrypted with the AES-256-CBC algorithm. One of the parts of the message
 
-## Сообщение
+## Message
 
-По сети будут передаваться сообщения следующего формата:
+Messages of the following format will be transmitted over the network:
 
 ```
                    BASE64
@@ -58,127 +60,126 @@ AES – симметричный алгоритм блочного шифров�
 +----------+--------------+-----------------+
 ```
 
-Сообщение представляет собой набор байт, закодированных в base64. Сообщение имеет следующий формат:
+The message is a set of bytes encoded in base64. The message has the following format:
 
- * Соль - первые 8 байт (salt)
- * Вектор инициализации - следующие 16 байт (iv, Initialization vector)
- * Зашифрованные алгоритмом AES-256-CBC данные (payload)
+* Salt - the first 8 bytes (salt)
+* Initialization vector - the next 16 bytes (iv, Initialization vector)
+* AES-256-CBC encrypted data (payload)
 
-## Соль
+## Salt
 
-Как указано выше, алгоритм AES-256 работает с ключами длиной 256 бит, но пароль (секретный ключ в виде строки, которым мы обменяемся) может быть произвольной длины. Для того, чтобы из текстового пароля произвольной длины сделать двоичный ключ фиксированной длины, который нужен для шифрующего алгоритма, используется хеш-функция.
+As stated above, the AES-256 algorithm works with keys of 256 bits, but the password (the secret key in the form of a string that we exchange) can be of any length. In order to make a binary key of a fixed length from a text password of any length, which is needed for the encryption algorithm, a hash function is used.
 
 ```
-password = "секретный ключ в виде строки, которым мы обменяемся"
+password = "secret key as a string"
 aes256key = hash(password)
 ```
 
-Что произойдет, если злоумышленник каким-то образом получит ключ (aes256key)? Хотя пароль (password) он не узнает (хеш-функция по определению является односторонней), все файлы, зашифрованные данным паролем, окажутся доступны, т.к. они зашифрованы тем же самым ключом (aes256key), и неважно из какого пароля этот ключ получен. Для того, чтобы избежать такой ситуации, используется чуть более сложная система генерации ключа:
+What happens if an attacker somehow gets the key (aes256key)? Although he won't know the password (the hash function is one-way by definition), all files encrypted with this password will be accessible, because they are encrypted with the same key (aes256key), and it doesn't matter from which password this key was obtained. In order to avoid such a situation, a slightly more complex key generation system is used:
 
 ```
-password = "секретный ключ в виде строки, которым мы обменяемся"
+password = "secret key as a string"
 aes256key = hash(password + salt)
 ```
 
-Здесь salt - соль, случайная строка. Соль не является секретом, и обычно передается открыто вместе с зашифрованным сообщением. Допустим, мы зашифровали два файла одним паролем (password). Ключи для них будут сгенерированы следующим образом:
+Here salt is a random string. Salt is not a secret and is usually transmitted openly along with the encrypted message. Let's say we encrypted two files with one password. The keys for them will be generated as follows:
 
 ```
-password = "секретный ключ в виде строки, которым мы обменяемся"
+password = "secret key as a string"
 aes256key1 = hash(password + salt1)
 aes256key2 = hash(password + salt2)
 ```
 
-Если злоумышленник получил aes256key1, он не может получить из него пароль (как и в простой схеме). Также при компрометации одного ключа (aes256key1 или aes256key2), сам пароль (password), и другие зашифрованные файлы никак не пострадают.
+If an attacker has received aes256key1, he cannot get the password from it (as in the simple scheme). Also, if one key (aes256key1 or aes256key2) is compromised, the password itself (password) and other encrypted files will not be affected in any way.
 
-Использование обычного целого числа, записанного как строка, в качестве соли даст 4 миллиарда вариаций, а 64-битового числа должно быть в любом случае достаточно.
+Using a regular integer written as a string as the salt would give 4 billion variations, and a 64-bit number should be sufficient in any case.
 
-## Вектор инициализации
+## Initialization vector
 
-Блочный шифр шифрует строго один блок. В нашем случае (AES-256) 16 байт. Исходный поток дополняется (padded) до размера, кратного размеру блока. Затем поток шифруется, блок за блоком. Эта схема называется ECB (Electronic Code Book). Проблема с ней в том, что одинаковые входные данные дают одинаковые зашифрованные блоки. Из анализа одинаковых блоков можно делать какие-то выводы о содержании файла.
+A block cipher encrypts exactly one block. In our case (AES-256) 16 bytes. The original stream is padded to a size multiple of the block size. Then the stream is encrypted, block by block. This scheme is called ECB (Electronic Code Book). The problem with it is that the same input data produces the same encrypted blocks. From the analysis of the same blocks, one can draw some conclusions about the contents of the file.
 
-Для борьбы с этим используется метод связывания блоков (block chaining). В простейшем случае это просто XOR с предыдущим блоком. Для простоты можно сказать, что методы связывания основаны на том, что текущий блок как-то замешивается с предыдущим. Поэтому естественным образом возникает вопрос - с чем замешивать самый первый блок? С искусственно сгенерированным "нулевым" блоком, который называется "инициализационным вектором".
+To combat this, a block chaining method is used. In the simplest case, this is simply XOR with the previous block. For simplicity, we can say that chaining methods are based on the fact that the current block is somehow mixed with the previous one. Therefore, the question naturally arises - what to mix the very first block with? With an artificially generated "zero" block, which is called the "initialization vector".
 
-Как и соль, инициализационный вектор не является секретом. В нашем случае мы будем передавать его в начале зашифрованного сообщения.
+Like the salt, the initialization vector is not a secret. In our case, we will transmit it at the beginning of the encrypted message.
 
-## Процесс шифрования
+## Encryption process
 
-Общая схема процесса шифрования выглядит так:
+The general scheme of the encryption process looks like this:
 
 ```
 +------------+    +--------+
-|   Пароль   |    |  Соль  |
-| (password) |    | (salt) |
+|  password  |    |  salt  |
 +------------+    +--------+
           |           |
           ▼           ▼
         +----------------+   +------------------------+
-        |   Секретный    |   |                        |
-        |  ключ AES-256  |   |         Вектор         |
-        | длиной 256 бит |   |       инициализации    | 
-        |  (secret key)  |   | (initialization vector)| 
+        |   Secret key   |   |                        |
+        |     AES-256    |   |  Initialization vector |
+        |                |   |                        | 
+        |  (secret key)  |   |                        | 
         +----------------+   +------------------------+
                       |         |
                       ▼         ▼
                      +-----------+
-     Данные    ----- |    Шифр   | ---------> Зашифрованные
-для шифрования       |  (Cipher) |               данные
+     Data      ----- |   Cipher  | --------->   Encrypted
+   to encrypt        |           |                 data
                      +-----------+              (payload)
 ```
 
-Для того, чтобы зашифровать данные, нам понадобятся:
+In order to encrypt the data, we will need:
 
- * `data` - Непосредственно данные для шифрования
- * `password` - Пароль для шифрования (ключ, которым мы обменяемся один раз, в виде строки произвольной длины)
- * `salt` - Случайно сгенерированная соль (массив байт размером 8)
- * `initialization vector` - Случайно сгенерированный вектор инициализации (массив байт размером 16)
+* `data` - The actual data to encrypt
+* `password` - The password to encrypt (the key that we will exchange once, in the form of a string of arbitrary length)
+* `salt` - A randomly generated salt (an array of bytes of size 8)
+* `initialization vector` - A randomly generated initialization vector (an array of bytes of size 16)
 
-Алгоритм работы шифрования:
+Encryption algorithm:
 
-1. Сгенерировать соль
-2. Сгенерировать вектор инициализации
-3. Сформировать секретный ключ AES-256 (бинарный ключ размером 256 бит) на основе пароля (password) и соли (salt)
-4. Сформировать шифр (cipher) на основе секретного ключа (secret key) и вектора инициализации (initialization vector)
-5. Применить шифр (cipher) к данным для шифрования и получить зашифрованные данные (payload)
-6. Сформировать сообщение message в виде массива байт
+1. Generate salt
+2. Generate initialization vector
+3. Generate AES-256 secret key (binary key of 256 bits) based on password and salt
+4. Generate cipher based on secret key and initialization vector
+5. Apply cipher to data to be encrypted and get encrypted data (payload)
+6. Generate message as byte array
+
 ```
 +----------+--------------+-----------------+
 |   Salt   | Init. vector |     Payload     |
 |  8 byte  |   16 byte    |    Any length   |
 +----------+--------------+-----------------+
 ```
-7. Преобразовать сообщение message в формат base64.
+7. Convert the message to base64 format.
 
-## Процесс расшифровки
+## Decryption process
 
-Процесс дешифрования похож на процесс шифрования:
+The decryption process is similar to the encryption process:
 
 ```
 +------------+    +--------+
-|   Пароль   |    |  Соль  |
-| (password) |    | (salt) |
+|            |    |        |
+| Password   |    | Salt   |
 +------------+    +--------+
           |           |
           ▼           ▼
         +----------------+   +------------------------+
-        |   Секретный    |   |                        |
-        |  ключ AES-256  |   |         Вектор         |
-        | длиной 256 бит |   |       инициализации    | 
-        |  (secret key)  |   | (initialization vector)| 
+        |   Secret key   |   |                        |
+        |    AES-256     |   |    Initialization      |
+        |                |   |       vector           | 
+        |  (secret key)  |   |                        | 
         +----------------+   +------------------------+
                       |         |
                       ▼         ▼
                      +-----------+
-Зашифрованные  ----- |    Шифр   | ---------> Расшифрованные
-   данные            |  (Cipher) |               данные
+  Encrypted    ----- |  Cipher   | --------->   Decrypted
+   data              |           |               data
   (payload)          +-----------+              
 ```
 
-Отличие в том, что больше нет необходимости генерировать пароль и соль. Теперь мы читаем их из начала переданного сообщения. Также теперь мы используем шифр в обратную сторону -- для дешифрования.
+The difference is that there is no need to generate a password and salt anymore. Now we read them from the beginning of the transmitted message. Also, now we use the cipher in the opposite direction -- for decryption.
 
-Полный алгоритм дешифрации:
+The full decryption algorithm:
 
-1. Получить сообщение, закодированное в base64
-
+1. Get the message encoded in base64
 ```
 +-------------------------------------------+
 |                BASE64                     |
@@ -187,18 +188,16 @@ aes256key2 = hash(password + salt2)
 |  8 byte  |   16 byte    |    Any length   |
 +----------+--------------+-----------------+
 ```
-
-2. Декодировать сообщение и получить набор байт
+2. Decode the message and get a set of bytes
 ```
 +----------+--------------+-----------------+
 |   Salt   | Init. vector |     Payload     |
 |  8 byte  |   16 byte    |    Any length   |
 +----------+--------------+-----------------+
 ```
-
-3. Сохранить соль (Salt), первые 8 байт сообщения, в массив байт
-4. Сохранить вектор инициалзации (Init. vector), следующие 16 байт сообщения, в массив байт
-5. Сохранить зашифрованные данные (Payload), оставшуюся часть сообщения, в массив байт
-6. Сформировать секретный ключ AES-256 (бинарный ключ размером 256 бит) на основе пароля (password) и соли (salt)
-7. Сформировать шифр (cipher) на основе секретного ключа (secret key) и вектора инициализации (initialization vector)
-8. Применить шифр (cipher) к зашифрованным данным (payload) для расшифровки и получить данные
+3. Store the salt (Salt), the first 8 bytes of the message, into a byte array
+4. Store the initialization vector (Init. vector), the next 16 bytes of the message, into a byte array
+5. Store the encrypted data (Payload), the rest of the message, into a byte array
+6. Generate a secret AES-256 key (a 256-bit binary key) based on the password and salt
+7. Generate a cipher based on the secret key and initialization vector
+8. Apply the cipher to the encrypted data (payload) to decrypt and get the data
