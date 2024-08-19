@@ -30,9 +30,10 @@ Over the network you will be able to send data in approximately this format:
 
 This library is not published in crates.io. So before you started you should:
 
-1. Clone and build
+1. Clone, run tests and build
 ```sh
 git clone
+cargo test
 cargo build --release
 ```
 
