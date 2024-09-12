@@ -2,7 +2,7 @@
 
 ## Quick start
 
-Two parties can exchange encrypted messages by agreeing to use a password. You can use an example implementation as follows:
+Two parties can exchange encrypted messages by agreeing to use a password. You can use this library as follows:
 
 ```rust
 use rust_aes256::AES256;
