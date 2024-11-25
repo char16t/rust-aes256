@@ -5,9 +5,13 @@ fn main() {
     let original: &str = "Original string";
 
     let aes256: AES256 = AES256::new(password.as_bytes());
-    let encrypted: String = aes256.encrypt(&original).expect("Unable to encrypt original message");
+    let encrypted: String = aes256
+        .encrypt(&original)
+        .expect("Unable to encrypt original message");
     println!("Encrypted: {}", encrypted);
-    
-    let decrypted: String = aes256.decrypt(&encrypted).expect("Unable to decrypt encrypted message");
+
+    let decrypted: String = aes256
+        .decrypt(&encrypted)
+        .expect("Unable to decrypt encrypted message");
     println!("Decrypted: {}", decrypted);
 }
