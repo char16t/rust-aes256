@@ -1,5 +1,7 @@
 This document [available in English](README.md).
 
+[![build](https://github.com/char16t/rust-aes256/actions/workflows/build.yml/badge.svg)](https://github.com/char16t/rust-aes256/actions/workflows/build.yml)
+
 ## Быстрый старт
 
 Две стороны могут обмениваться зашифрованными сообщениями, предварительно договорившись использовать пароль (password). Вы можете использовать эту библиотеку следующим образом:

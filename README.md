@@ -1,5 +1,7 @@
 Этот документ [переведён на русский язык](README.ru.md).
 
+[![build](https://github.com/char16t/rust-aes256/actions/workflows/build.yml/badge.svg)](https://github.com/char16t/rust-aes256/actions/workflows/build.yml)
+
 ## Quick start
 
 Two parties can exchange encrypted messages by agreeing to use a password. You can use this library as follows:
