@@ -1,6 +1,6 @@
 This document [available in English](README.md).
 
-[![build](https://github.com/char16t/rust-aes256/actions/workflows/build.yml/badge.svg)](https://github.com/char16t/rust-aes256/actions/workflows/build.yml)
+[![build](https://github.com/char16t/rust-aes256/actions/workflows/build.yml/badge.svg)](https://github.com/char16t/rust-aes256/actions/workflows/build.yml) ![coverage](https://char16t.github.io/rust-aes256/badges/flat.svg)
 
 ## Быстрый старт
 
